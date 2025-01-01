@@ -1,0 +1,11 @@
+--Activity 11
+
+select salesman_id, salesman_name from salesman a where (select count(*) from orders b where a.salesman_id = b.salesman_id) > 1
+union
+select customer_id,  customer_name from customers c where (select count(*) from orders d where c.customer_id = d.customer_id) > 1;
+
+select a.salesman_id, a.salesman_name, b.order_no, 'Highest on', b.order_date from salesman a, orders b where a.salesman_id=b.salesman_id
+and b.purchase_amount = (select MAX(purchase_amount) from orders c where c.order_date = b.order_date)
+UNION
+select a.salesman_id, a.salesman_name, b.order_no, 'Lowest on', b.order_date from salesman a, orders b where a.salesman_id=b.salesman_id
+and b.purchase_amount = (select MIN(purchase_amount) from orders c where c.order_date = b.order_date);
