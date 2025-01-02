@@ -1,4 +1,3 @@
-	
 def sum(InputNum):
   if InputNum <= 1:
     return InputNum
