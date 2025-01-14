@@ -21,7 +21,7 @@ public class Activity4
 	String message;
 	WebDriverWait wait;
 	String firstName = "Test123";
-	String lastName = "Test1234";
+	String lastName = "Test123";
 		
 	@BeforeClass
 	public void setup() 
@@ -92,7 +92,8 @@ public class Activity4
     public void addEmployeeToPIM() 
     {
 		//Find the PIM option in the menu and click it.
-		WebElement pimMenu = driver.findElement(By.xpath("/html/body/div[1]/div[2]/ul/li[2]/a/b"));
+		//WebElement pimMenu = driver.findElement(By.xpath("/html/body/div[1]/div[2]/ul/li[2]/a/b"));
+		WebElement pimMenu = driver.findElement(By.xpath("//*[@id=\"menu_pim_viewPimModule\"]"));
 		
 		System.out.println("name of header - " + pimMenu.getText());
 		
@@ -135,8 +136,8 @@ public class Activity4
         WebElement employee = driver.findElement(By.xpath("//*[@id=\"empsearch_employee_name_empName\"]"));
         employee.sendKeys(input);
         employee.click();
-        /*
-        List<WebElement> searchData = driver.findElements(By.cssSelector(".ac_results"));
+        
+        List<WebElement> searchData = driver.findElements(By.xpath("//div[@class=\"ac_results\"]/ul/li"));
         
         System.out.println("Select name from dropdown : ");
             
@@ -158,11 +159,8 @@ public class Activity4
             	System.out.println("Match not found, selecting next option ");
             }
         }
-        */
-        //WebElement search = driver.findElement(By.xpath("//*[@id=\"searchBtn\"]"));
-        WebElement search = driver.findElement(By.xpath("//*[@id=\"searchBtn\"]"));
         
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"searchBtn\"]")));
+        WebElement search = driver.findElement(By.xpath("//*[@id=\"searchBtn\"]"));
         
         // click on search button
         search.click(); 
