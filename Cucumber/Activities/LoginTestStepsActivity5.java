@@ -3,6 +3,7 @@ package stepDefinitions;
 import java.time.Duration;
 
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -14,12 +15,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class LoginTestSteps 
+public class LoginTestStepsActivity5 
 {
 	WebDriver driver;
 	WebDriverWait wait;
 	
-	@Given("User is on Login page")
+	@Given("the user is on the login page")
 	public void loginPage() 
 	{
 		//Initialize the driver and wait instance.
@@ -30,20 +31,21 @@ public class LoginTestSteps
 		//Use get() to open the Google home page.
 		driver.get("https://training-support.net/webelements/login-form");
 	}
-
 	
-	@When("User enters username and password")
-	public void entersCredientials() 
+	@When("the user enters {string} and {string}") 
+	public void entersCredientials(String username, String password) 
 	{
-		driver.findElement(By.xpath("//input[@id='username']")).sendKeys("admin");
-		driver.findElement(By.xpath("//input[@name='password']")).sendKeys("password");
-		
-		driver.findElement(By.xpath("//button[text()=\"Submit\"]")).click();
-		
+		driver.findElement(By.xpath("//input[@id='username']")).sendKeys(username);
+		driver.findElement(By.xpath("//input[@name='password']")).sendKeys(password);
 	}
+
+	@And("clicks the submit button")
+    public void clickSubmit() {
+        // Find the submit button and click it
+		driver.findElement(By.xpath("//button[text()=\"Submit\"]")).click();
+    }
 	
-	
-	@Then("Read the page title and confirmation message")
+	@Then("Read the page title and confirmation message on page")
 	public void showLoginResult() 
 	{
 		//wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("action-confirmation")));
@@ -59,28 +61,38 @@ public class LoginTestSteps
         System.out.println("Page title is: " + pageTitle);
         System.out.println("Login message is: " + confirmMessage);
 		
-		//Assertions.assertEquals(msg, "Login Success!");
-        
-       
         if(confirmMessage.contains("Success!")) 
         {
         	confirmMessage = driver.findElement(By.xpath("/html/body/div/main/div/div/div/div/div/h2")).getText();
-         	
+        	System.out.println("confirmation message is: " + confirmMessage);
+        	
             Assert.assertEquals(confirmMessage, "Welcome Back, Admin!");
         } 
         else 
         {
         	confirmMessage = driver.findElement(By.xpath("//*[@id='subheading']")).getText();
+        	System.out.println("confirmation message is: " + confirmMessage);
         	
             Assert.assertEquals(confirmMessage, "Invalid credentials");
         }
 		
 	}
 
-	@And("Close the Web Browser")
+	 @Then("get the confirmation text and verify message as {string}")
+	 public void confirmMessageAsInput(String expectedMessage) 
+	 {
+		// Find the confirmation message
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//h1"), "Login"));
+		String message = driver.findElement(By.xpath("//h1")).getText();
+		// Assert message
+		Assertions.assertEquals(expectedMessage, message);
+	 }
+	 
+	@And("close the Web Browser now")
     public void closeBrowser() {
         //Close browser
         driver.close();
     }
+
 
 }

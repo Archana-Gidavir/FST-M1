@@ -14,12 +14,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class LoginTestSteps 
+public class LoginTestStepsActivity4 
 {
 	WebDriver driver;
 	WebDriverWait wait;
 	
-	@Given("User is on Login page")
+	@Given("New User is on Login page")
 	public void loginPage() 
 	{
 		//Initialize the driver and wait instance.
@@ -30,20 +30,18 @@ public class LoginTestSteps
 		//Use get() to open the Google home page.
 		driver.get("https://training-support.net/webelements/login-form");
 	}
-
 	
-	@When("User enters username and password")
-	public void entersCredientials() 
+	@When("New User enters {string} and {string}") 
+	public void entersCredientials(String username, String password) 
 	{
-		driver.findElement(By.xpath("//input[@id='username']")).sendKeys("admin");
-		driver.findElement(By.xpath("//input[@name='password']")).sendKeys("password");
+		driver.findElement(By.xpath("//input[@id='username']")).sendKeys(username);
+		driver.findElement(By.xpath("//input[@name='password']")).sendKeys(password);
 		
 		driver.findElement(By.xpath("//button[text()=\"Submit\"]")).click();
 		
 	}
-	
-	
-	@Then("Read the page title and confirmation message")
+
+	@Then("New Read the page title and confirmation message")
 	public void showLoginResult() 
 	{
 		//wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("action-confirmation")));
@@ -77,10 +75,12 @@ public class LoginTestSteps
 		
 	}
 
-	@And("Close the Web Browser")
+	@And("New Close the Web Browser")
     public void closeBrowser() {
         //Close browser
         driver.close();
     }
 
 }
+
+
