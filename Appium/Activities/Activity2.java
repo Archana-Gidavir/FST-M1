@@ -1,7 +1,5 @@
 package activity;
 
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -19,7 +17,6 @@ public class Activity2
 {
     // Driver Declaration
     AndroidDriver driver;
-    WebDriverWait wait;
     
     // Set up method
     @BeforeClass
@@ -45,19 +42,21 @@ public class Activity2
 
     // Test method
     @Test
-    public void chromeTest() 
+    public void chromeTest() throws InterruptedException 
     {
-        // Find heading on the page
+    	// Find heading on the page
         String pageHeading = driver.findElement(AppiumBy.xpath("//android.view.View[@text=\"Training Support\"]")).getText();
 
+        Thread.sleep(5000);
+        
         // Print to console
         System.out.println("Page Heading: " + pageHeading);
         
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.xpath("//android.view.View[@text=\"About Us\"]")));
-		
         // Find and click the About Us link
         driver.findElement(AppiumBy.xpath("//android.view.View[@text=\"About Us\"]")).click();
 
+        Thread.sleep(5000);
+        
         // Find heading of new page and print to console
         String aboutPageHeading = driver.findElement(AppiumBy.xpath("//android.view.View[@text=\"About Us\"]")).getText();
         System.out.println("Page Heading: " + aboutPageHeading);
