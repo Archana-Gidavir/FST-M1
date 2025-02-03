@@ -123,15 +123,12 @@ public class Activity4
         
         System.out.println("clear the list");
         
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.xpath("//android.widget.EditText[@resource-id=\"taskInput\"]")));
-		
+        Thread.sleep(3000);
+        
         List<WebElement> list1 = driver.findElements(AppiumBy.xpath("//android.view.View[@resource-id=\"tasksList\"]/android.view.View"));
         System.out.println("number of tasks: " + list1.size());
         
-        Assert.assertEquals(list1.size(), 1);
+        Assert.assertEquals(list1.size(), 0);
         
     }
-	
-
-
 }
