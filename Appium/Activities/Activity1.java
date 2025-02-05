@@ -1,76 +1,106 @@
-package activity;
-
-import static org.testng.Assert.assertEquals;
+package project;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Duration;
+import java.util.List;
 
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
 public class Activity1 
 {
-	AppiumDriver driver;
-	
-	//setup function
-	@BeforeClass
-	public void setup() throws MalformedURLException, URISyntaxException 
-	{
-		//desired capabilities
-		UiAutomator2Options options = new UiAutomator2Options();
+	// Driver Declaration
+    AndroidDriver driver;
+    WebDriverWait wait;
+
+    // Set up method
+    @BeforeClass
+    public void setUp() throws MalformedURLException, URISyntaxException 
+    {
+        // Desired Capabilities
+        UiAutomator2Options options = new UiAutomator2Options();
         options.setPlatformName("android");
         options.setAutomationName("UiAutomator2");
-        options.setAppPackage("com.android.calculator2");
-        options.setAppActivity(".Calculator");
+        options.setAppPackage("com.google.android.apps.tasks");
+        options.setAppActivity(".ui.TaskListsActivity");
         options.noReset();
-        
-        /*//For IOS
-        XCUITestOptions iosOptions = new XCUITestOptions();
-        iosOptions.setPlatformName("ios");
-        iosOptions.setAutomationName("XCUITest");
-        iosOptions.setApp("/path/to/app.ipa");
-		iosOptions.noReset();*/
 
         // Server Address
-        //URL serverURL = new URL("http://localhost:4723");
         URL serverURL = new URI("http://localhost:4723").toURL();
-        
-        
+
         // Driver Initialization
         driver = new AndroidDriver(serverURL, options);
+
+        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
-	
-	// Test method
+
+    // Test method
     @Test
-    public void multiplyTest() 
+    public void googleTask() throws InterruptedException 
     {
-    	//find 5 and tap it
-    	driver.findElement(AppiumBy.id("digit_5")).click();
+    	// Wait for elements to load
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.xpath("//com.google.android.material.floatingactionbutton.FloatingActionButton[@content-desc=\"Create new task\"]")));
+                
+        //Open the Google Tasks app.
+        
+        String[] tasklist = new String[] {
+        		"Complete Activity with Google Tasks", 
+        		"Complete Activity with Google Keep", 
+				"Complete the second Activity Google Keep" };
+
+        for (int i = 0; i < 3; i++)
+        {
+        	//Click the button to add a new task.
+        	driver.findElement(AppiumBy.xpath("//com.google.android.material.floatingactionbutton.FloatingActionButton[@content-desc=\"Create new task\"]")).click();
     	
-    	//find + symbol and tap it
-    	driver.findElement(AppiumBy.accessibilityId("×")).click();
-    	
-    	//find 9 and tap it
-    	driver.findElement(AppiumBy.id("com.android.calculator2:id/digit_9")).click();
-    	
-    	//find = symbol and tap it
-    	driver.findElement(AppiumBy.accessibilityId("equals")).click();
-    	
-    	String result = driver.findElement(AppiumBy.id("com.android.calculator2:id/result")).getText();
-    	System.out.println("multiplication is : " + result);
-    	//assertions
-    	assertEquals(result, "45");
+        	//Add the following tasks:
+        	//	Complete Activity with Google Tasks
+        	//	Complete Activity with Google Keep
+        	//	Complete the second Activity Google Keep
+
+        	System.out.println("Adding new task : ");
+        	// Wait for elements to load
+        	wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.xpath("//android.widget.EditText[@resource-id=\"com.google.android.apps.tasks:id/add_task_title\"]")));
+        
+        	driver.findElement(AppiumBy.xpath("//android.widget.EditText[@resource-id=\"com.google.android.apps.tasks:id/add_task_title\"]"))
+        	.clear();
+        	
+        	driver.findElement(AppiumBy.xpath("//android.widget.EditText[@resource-id=\"com.google.android.apps.tasks:id/add_task_title\"]"))
+        	.sendKeys(tasklist[i]);
+        
+        	//After each task is added, the Save button should be clicked.
+        	driver.findElement(AppiumBy.xpath("//android.widget.Button[@resource-id=\"com.google.android.apps.tasks:id/add_task_done\"]"))
+        	.click();
+        
+        	System.out.println("Added new task : " + tasklist[i]);
+        	
+        	Thread.sleep(500);
+        }
+        
+     
+        	
+    	//Write an assertion to ensure all three tasks have been added to the list.
+        List<WebElement> list = driver.findElements(AppiumBy.xpath("//android.support.v7.widget.RecyclerView[@resource-id=\"com.google.android.apps.tasks:id/tasks_list\"]/android.widget.FrameLayout"));
+                
+        System.out.println("total added task : " + list.size());
+        
+        Assert.assertEquals(list.size(), 3);        
     	
     }
-    
+
+
     // Tear down method
     @AfterClass
     public void tearDown() 
@@ -78,6 +108,5 @@ public class Activity1
         // Close the app
         driver.quit();
     }
-
 
 }
